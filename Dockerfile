@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
+FROM openjdk:11
+EXPOSE ${SPRINGBOOT_PORT}
+ADD ./build/libs/*.jar app.jar
+ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-jar","/app.jar"]

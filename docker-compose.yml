@@ -13,7 +13,7 @@ services:
 
 
   app:
-    build:
+    build: .
     ports:
       - 8080:8080  # 스프링 애플리케이션의 포트 매핑 (호스트 포트:컨테이너 포트)
     environment:

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content" class="container my-3">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+
+    <h5 class="my-3 border-bottom pb-2">질문등록</h5>
+    <form th:action="@{/create}" th:object="${questionForm}" method="post"> <!-- postmapping 필요 -->
+        <!-- 오류 발생시 원인을 알려주는 얼럿창
+       th:replace 로 공통 템플릿을 템플릿 내에 삽입가능
+       div 를 form_errors.html 파일의 th:fragment 속성명이 formErrorsFragment인 엘리먼트로 교체-->
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+
+
+        <!-- name이 아닌 th:field 속성 사용
+        해당 태그의 id, name, value 속성이 모두 자동으로 생성
+        타임리프가 value 속성에 기존 값을 채워 넣어 오류가 발생하더라도 기존에 입력한 값이 유지 -->
+        <div class="mb-3">
+            <label for="subject" class="form-label">제목</label>
+            <input type="text" th:field="*{subject}" id="subject" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea th:field="*{content}" id="content" class="form-control" rows="10"></textarea>
+        </div>
+
+
+        <input type="submit" value="저장하기" class="btn btn-primary my-2">
+    </form>
+
+    </body>
+</div>
+</html>

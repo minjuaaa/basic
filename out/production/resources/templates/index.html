@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorate="~{layout}"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="container my-3">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,17 @@
 </head>
 <body>
 <p>메인화면입니다</p>
-
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/user/signup}">회원가입</a>
+        </li>
+    </ul>
+</div>
 <table>
     <thead>
     <tr>

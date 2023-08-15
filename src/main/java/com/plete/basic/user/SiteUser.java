@@ -14,11 +14,10 @@ public class SiteUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)  //user와 email에 같은값 못넣음
-    private String username;
+    @Column(unique = true)
+    private String email;
 
     private String password;
 
-    @Column(unique = true)
-    private String email;
+
 }

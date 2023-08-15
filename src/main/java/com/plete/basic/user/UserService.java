@@ -11,9 +11,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SiteUser create(String username, String email, String password) {
+    public SiteUser create(String email, String password) {
         SiteUser user = new SiteUser();
-        user.setUsername(username);
         user.setEmail(email);
         //비밀번호는 암호화 저장
         //BCryptPasswordEncoder 객체를 직접 생성하여 사용하지 않고

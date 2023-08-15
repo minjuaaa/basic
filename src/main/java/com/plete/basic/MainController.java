@@ -4,6 +4,8 @@ package com.plete.basic;
 import com.plete.basic.question.Question;
 import com.plete.basic.question.QuestionForm;
 import com.plete.basic.question.QuestionService;
+import com.plete.basic.user.UserCreateForm;
+import com.plete.basic.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import java.util.List;
 public class MainController {
 
     private final QuestionService questionService;
+    private final UserService userService;
+
 
     // 홈 화면에서 question 리스트 출력, 페이징
     @GetMapping("/")
@@ -65,4 +69,30 @@ public class MainController {
         this.questionService.create(questionForm.getSubject(), questionForm.getContent());
         return "redirect:/";
     }
+
+    //회원가입
+    @GetMapping("/user/signup")
+    public String signup(UserCreateForm userCreateForm) {
+        return "signup_form";
+    }
+
+    @PostMapping("/user/signup")
+    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "signup_form";
+        }
+        userService.create(userCreateForm.getEmail(), userCreateForm.getPassword1());
+
+        return "redirect:/";
+    }
+
+    //로그인 담당
+    @GetMapping("/user/login")
+    public String login() {
+        return "login_form";
+    }
+
+
+
+
 }

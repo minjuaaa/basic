@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{layout}"
-      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="container my-3">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+        <h1 style="display:inline;">제목:</h1>
+        <h1 style="display:inline;" th:text="${question.subject}"></h1>
+        <h3>내용</h3><div class="card-text" style="white-space: pre-line;" th:text="${question.content}"></div>
+        <hr/>
+        <p style="display:inline;">작성자:</p>
+        <span style="display:inline;" th:if="${question.author != null}" th:text="${question.author.username}"></span>
+        <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
 
-    <h1 th:text="${question.subject}"></h1>
-    <div th:text="${question.content}"></div>
+
+        <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
+               sec:authorize="isAuthenticated()"
+               th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+               th:text="수정"></a>
+        <a th:href="@{|/question/delete/${question.id}|}"
+               class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+               th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+               th:text="삭제"></a>
+
 
 </body>
 </div>

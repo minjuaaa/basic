@@ -1,54 +1,147 @@
 package com.plete.basic;
 
+import com.plete.basic.user.UserSecurityService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
+
+@RequiredArgsConstructor
 @Configuration
-@EnableWebSecurity  //모든 요청 URL이 스프링 시큐리티의 제어를 받도록 만드는 애너테이션
-public class SecurityConfig {
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    private final UserSecurityService userSecurityService;
 
-        http
-
-                //모든 인증되지 않은 요청을 허락한다는 의미 -> 로그인을 하지 않더라도 모든 페이지에 접근가능
-                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
-                // 로그인 설정을 담당하는 부분 로그인 성공시에 이동하는 디폴트 페이지 루트 URL(/)
-                .formLogin((formLogin) -> formLogin
-                        .loginPage("/user/login")
-                        .defaultSuccessUrl("/")
-                        .usernameParameter("email"))
-                        
-
-
-                .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true))
-
-                
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/**").permitAll()
+                .and()
+                .csrf().ignoringAntMatchers("/h2-console/**")
+                .and()
+                .headers()
+                .addHeaderWriter(new XFrameOptionsHeaderWriter(
+                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+                .and()
+                .formLogin()
+                .loginPage("/user/login")
+                .defaultSuccessUrl("/")
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
         ;
-        return http.build();
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() { //가입 시 비밀번호 암호화
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userSecurityService).passwordEncoder(passwordEncoder());
     }
 }
+//
+//@Configuration
+//@EnableMethodSecurity(prePostEnabled = true)
+//@RequiredArgsConstructor
+//@EnableWebSecurity  //모든 요청 URL이 스프링 시큐리티의 제어를 받도록 만드는 애너테이션
+//public class SecurityConfig {
+//
+//
+//
+//
+//
+//    @Bean
+//    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.authorizeHttpRequests().requestMatchers(
+//                        new AntPathRequestMatcher("/**")).permitAll()
+//                .and()
+//                .csrf().ignoringRequestMatchers(
+//                        new AntPathRequestMatcher("/h2-console/**"))
+//                .and()
+//                .headers()
+//                .addHeaderWriter(new XFrameOptionsHeaderWriter(
+//                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+//                .and()
+//                .formLogin()
+//                .loginPage("/user/login")
+//                .defaultSuccessUrl("/")
+//                .and()
+//                .logout()
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+//                .logoutSuccessUrl("/")
+//                .invalidateHttpSession(true)
+//        ;
+//
+//        return http.build();
+//    }
+//
+//
+//
+//    @Bean
+//    PasswordEncoder passwordEncoder() { //가입 시 비밀번호 암호화
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
+//}
+//
+//@Configuration
+//@EnableWebSecurity
+//@EnableMethodSecurity(prePostEnabled = true)
+//public class SecurityConfig {
+//    @Bean
+//    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.authorizeRequests().requestMatchers(
+//                        new AntPathRequestMatcher("/**")).permitAll()
+//                .and()
+//                .csrf().ignoringRequestMatchers(
+//                        new AntPathRequestMatcher("/h2-console/**"))
+//                .and()
+//                .headers()
+//                .addHeaderWriter(new XFrameOptionsHeaderWriter(
+//                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+//                .and()
+//                .formLogin()
+//                .loginPage("/user/login")
+//                .defaultSuccessUrl("/")
+//                .and()
+//                .logout()
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+//                .logoutSuccessUrl("/")
+//                .invalidateHttpSession(true)
+//        ;
+//        return http.build();
+//    }
+//
+//    @Bean
+//    PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
+//}

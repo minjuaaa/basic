@@ -10,14 +10,14 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class UserCreateForm {
-    @Size(min = 3, max = 25)
 
-    @NotEmpty(message = "이메일은 필수항목입니다.")
+    @NotEmpty
     @Email
-    private String email;
+    private String username;
 
-    @NotEmpty(message = "비밀번호는 필수항목입니다.")
-    private String password1;
+    @Size(min = 8)
+    @NotEmpty
+    private String password;
 
 
 }

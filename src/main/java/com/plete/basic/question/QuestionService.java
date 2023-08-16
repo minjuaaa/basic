@@ -1,5 +1,6 @@
 package com.plete.basic.question;
 
+import com.plete.basic.user.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,11 +41,22 @@ public class QuestionService {
     }
 
     // 질문작성
-    public void create(String subject, String content) {
+    public void create(String subject, String content, SiteUser user) {
         Question q = new Question();
         q.setSubject(subject);
         q.setContent(content);
+        q.setAuthor(user);
         q.setCreateDate(LocalDateTime.now());
         this.questionRepository.save(q);
+    }
+
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        this.questionRepository.save(question);
+    }
+
+    public void delete(Question question) {
+        this.questionRepository.delete(question);
     }
 }

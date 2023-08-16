@@ -3,12 +3,9 @@ package com.plete.basic.question;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+import com.plete.basic.user.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +22,9 @@ public class Question {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @ManyToOne
+    private SiteUser author;
 
     private LocalDateTime createDate;
 }

@@ -9,8 +9,10 @@
     <body>
 
     <h5 class="my-3 border-bottom pb-2">질문등록</h5>
-    <form th:action="@{/create}" th:object="${questionForm}" method="post"> <!-- postmapping 필요 -->
-        <!-- 오류 발생시 원인을 알려주는 얼럿창
+    <form th:object="${questionForm}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+<!--    <form th:action="@{/create}" th:object="${questionForm}" method="post"> &lt;!&ndash; postmapping 필요 &ndash;&gt;-->
+<!--        &lt;!&ndash; 오류 발생시 원인을 알려주는 얼럿창
        th:replace 로 공통 템플릿을 템플릿 내에 삽입가능
        div 를 form_errors.html 파일의 th:fragment 속성명이 formErrorsFragment인 엘리먼트로 교체-->
         <div th:replace="~{form_errors :: formErrorsFragment}"></div>

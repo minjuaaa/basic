@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class SiteUser {
     private Long id;
 
     @Column(unique = true)
-    private String email;
+    private String username;
 
     private String password;
 
